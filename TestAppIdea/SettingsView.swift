@@ -7,6 +7,9 @@
 import SwiftUI
 
 struct SettingsView: View {
+    
+    @AppStorage ("IsDebugEnabled") var isDebugEnabled: Bool = false
+    
     var body: some View {
         
         NavigationStack{
@@ -15,19 +18,18 @@ struct SettingsView: View {
                 NavigationLink{
                     ProfileView()
                 } label: {
-                    Label(
-                        title: { Text("View Profile") },
-                        icon: { Image(systemName: "person.circle").font(.title3) }
-                    )
+                    ListItem(iconColor: .mint, iconSymbol: "person.circle", itemLabel: "View Profile")
                 }
                 
                 NavigationLink{
                     MainView()
                 } label: {
-                    Label(
-                        title: { Text("View Main View") },
-                        icon: { Image(systemName: "globe").font(.title3) }
-                    )
+                    ListItem(iconColor: .blue, iconSymbol: "globe", itemLabel: "Nav to Main View")
+                    
+//                    Label(
+//                        title: { Text("View Main View") },
+//                        icon: { Image(systemName: "globe").font(.title3) }
+//                    )
                 }
                 
                 Section{
@@ -36,10 +38,7 @@ struct SettingsView: View {
                         AccentColorView()
                     } label: {
                         HStack{
-                            Label(
-                                title: { Text("Change Accent Color") },
-                                icon: { Image(systemName: "paintbrush").font(.title3) }
-                            )
+                            ListItem(iconColor: .green, iconSymbol:"paintbrush", itemLabel: "Change Accent Color")
                             Spacer()
                             Circle()
                                 .frame(width: 20, height: 20)
@@ -52,6 +51,17 @@ struct SettingsView: View {
                     Label(
                         title: { Text("Visual Settings") },
                         icon: { Image(systemName: "photo") }
+                    )
+                }
+                
+                Section{
+                    Toggle(isOn: $isDebugEnabled, label: {
+                        ListItem(iconColor: isDebugEnabled ? .green : .black, iconSymbol: "ant", itemLabel: "Debug Enabled")
+                    })
+                } header: {
+                    Label(
+                        title: { Text("Debug Settings") },
+                        icon: { Image(systemName: "ant") }
                     )
                 }
                 
@@ -92,8 +102,29 @@ struct SettingsView: View {
         }
     }
 }
-                    
 
+
+struct ListItem: View {
+    var iconColor: Color = Color.blue
+    var iconSymbol: String = "globe"
+    var itemLabel: String = "Enter title"
+    
+    var body: some View {
+        HStack{
+            ZStack{
+                RoundedRectangle(cornerRadius: 7)
+                    .frame(width: 35, height: 35)
+                    .foregroundStyle(iconColor)
+                Image(systemName: iconSymbol)
+                    .foregroundStyle(Color.white)
+                    .font(.title2)
+            }
+            Text(itemLabel)
+                .padding(.leading, 10)
+                .font(.body)
+        }
+    }
+}
 
 #Preview {
     SettingsView()
